@@ -5,8 +5,7 @@ import { server } from "../main";
 import axios from "axios";
 
 function Header() {
-    const { isSeller, isAuthenticated, setIsAuthenticated, loading, setLoading } =
-    useContext(Context);
+    const { isSeller, isAuthenticated, setIsAuthenticated, loading, setLoading } = useContext(Context);
 
     const user = isSeller ? "sellers" : "buyers";
 
