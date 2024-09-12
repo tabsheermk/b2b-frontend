@@ -25,19 +25,32 @@ function Header() {
   };
 
   return (
-    <nav className="header">
+    <nav className="bg-white shadow-md p-4 flex justify-between items-center">
       <div>
-        <h2>B2B Marketplace</h2>
+        <h2 className="text-2xl font-bold text-gray-800">B2B Marketplace</h2>
       </div>
-      <article>
-        <Link to={"/"}>Home</Link>
-        <Link to={"/profile"}>Profile</Link>
+      <article className="flex items-center space-x-6">
+        <Link to="/" className="text-gray-600 hover:text-gray-800 transition">
+          Home
+        </Link>
+        <Link to="/profile" className="text-gray-600 hover:text-gray-800 transition">
+          Profile
+        </Link>
         {isAuthenticated ? (
-          <button disabled={loading} onClick={handleLogout}>
+          <button
+            disabled={loading}
+            onClick={handleLogout}
+            className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition"
+          >
             Logout
           </button>
         ) : (
-          <Link to={"/sign-in"}>Sign In</Link>
+          <Link
+            to="/sign-in"
+            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
+          >
+            Sign In
+          </Link>
         )}
       </article>
     </nav>

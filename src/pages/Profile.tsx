@@ -27,10 +27,12 @@ function Profile() {
   return loading ? (
     <LoadingSpinnerSVG />
   ) : (
-    <div>
-      <h1>{user?.name}</h1>
-      <h2>{user?.business_name}</h2>
-      <p>{user?.email}</p>
+    <div className="flex justify-center items-center min-h-screen bg-gray-100">
+      <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-sm text-center">
+        <h1 className="text-2xl font-bold text-gray-800 mb-4">{user?.name}</h1>
+        <h2 className="text-xl text-gray-600 mb-2">{user?.business_name}</h2>
+        <p className="text-gray-500">{user?.email}</p>
+      </div>
     </div>
   );
 }

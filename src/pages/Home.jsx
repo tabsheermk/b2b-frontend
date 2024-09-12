@@ -1,12 +1,23 @@
-import React from 'react';
+import React, { useContext } from 'react';
+
 
 function Home() {
+
+  const {isAuthenticated, isSeller} = useContext(Context);
+
   return (
-    <div className='bg-blue-900'>
-      This is home
-      what the fuck is this
+    <div className="">
+      {
+        true ? (
+          <SellerDashboard />
+        ) : (
+          <BuyerDashboard />
+        )
+      }
     </div>
   )
 }
+import { Context } from '../main';
+import SellerDashboard from '../components/SellerDashboard';
 
 export default Home;
