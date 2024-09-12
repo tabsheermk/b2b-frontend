@@ -17,6 +17,11 @@ export default [
         sourceType: 'module',
       },
     },
+    env: {
+      browser: true,
+      es2021: true,
+      node: true, // Add node support for server-side code if needed
+    },
     settings: { react: { version: '18.3' } },
     plugins: {
       react,
