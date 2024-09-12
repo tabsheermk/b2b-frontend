@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import { Context } from "../main";
+import { Navigate } from "react-router-dom";
 
 function LoadingSpinnerSVG() {
   return (
@@ -24,6 +25,9 @@ function LoadingSpinnerSVG() {
 function Profile() {
   const { isAuthenticated, loading, user } = useContext(Context);
   console.log(user);
+
+  if (!isAuthenticated) return <Navigate to="/sign-in" /> 
+
   return loading ? (
     <LoadingSpinnerSVG />
   ) : (
