@@ -5,33 +5,24 @@ import { Context, server } from "../main";
 
 function SignIn() {
   
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-  });
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const handleInputChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
+  const { isSeller, setIsSeller, isAuthenticated, setIsAuthenticated, loading, setLoading} = useContext(Context);
+
+  const user = isSeller ? "sellers" : "buyers";
 
   const handleSwitch = () => {
     setIsSeller(!isSeller); // Toggle between buyer and seller
   };
 
 
-  const { isSeller, setIsSeller, isAuthenticated, setIsAuthenticated, loading, setLoading } = useContext(Context);
-
-  const user = isSeller ? "sellers" : "buyers";
-
   const handleSubmit = async (e) => {
     setLoading(true);
     e.preventDefault();
     try {
       const { data } = await axios.post(
-        `${server}/${user}/signin`,
+        `${server}/api/v1/${user}/signin`,
         {
           email,
           password,
@@ -65,15 +56,15 @@ function SignIn() {
         <form onSubmit={handleSubmit}>
           <input
             type="email"
-            value={formData.email}
-            onChange={handleInputChange}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             placeholder="Email"
             required
           />
           <input
             type="password"
-            value={formData.password}
-            onChange={handleInputChange}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
             required
           />

@@ -12,7 +12,7 @@ function Header() {
     const handleLogout = async () => {
     setLoading(true);
     try {
-      await axios.get(`${server}/${user}/logout`, {
+      await axios.get(`${server}/api/v1/${user}/logout`, {
         withCredentials: true,
       });
 
@@ -37,7 +37,7 @@ function Header() {
             Logout
           </button>
         ) : (
-          <Link to={"/sign-in"}>Login</Link>
+          <Link to={"/sign-in"}>Sign In</Link>
         )}
       </article>
     </nav>

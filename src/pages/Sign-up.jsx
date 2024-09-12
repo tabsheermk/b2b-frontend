@@ -5,36 +5,27 @@ import { Context, server } from "../main";
 
 function SignUp() {
   
-  const [formData, setFormData] = useState({
-    name: '',
-    business_name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-  });
-
-  const handleInputChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleSwitch = () => {
-    setIsSeller(!isSeller); // Toggle between buyer and seller
-  };
-
+  const [name, setName] = useState("");
+  const [businesName, setBusinessName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const { isSeller, setIsSeller, isAuthenticated, setIsAuthenticated, loading, setLoading } = useContext(Context);
 
   const user = isSeller ? "sellers" : "buyers";
+
+
+  const handleSwitch = () => {
+    setIsSeller(!isSeller); // Toggle between buyer and seller
+  };
 
   const handleSubmit = async (e) => {
     setLoading(true);
     e.preventDefault();
     try {
       const { data } = await axios.post(
-        `${server}/${user}/signup`,
+        `${server}/api/v1/${user}/signup`,
         {
           name,
           email,
@@ -70,36 +61,36 @@ function SignUp() {
         <form onSubmit={handleSubmit}>
           <input
             type="text"
-            value={formData.name}
-            onChange={handleInputChange}
+            value={name}
+            onChange={(e) => setName(e.target.name)}
             placeholder="Name"
             required
           />
           <input
             type="email"
-            value={formData.email}
-            onChange={handleInputChange}
+            value={email}
+            onChange={(e) => setEmail(e.target.email)}
             placeholder="Email"
             required
           />
           <input
             type="text"
-            value={formData.business_name}
-            onChange={handleInputChange}
+            value={businesName}
+            onChange={(e) => setBusinessName(e.target.businesName)}
             placeholder="Business Name"
             required
           />
           <input
             type="password"
-            value={formData.password}
-            onChange={handleInputChange}
+            value={password}
+            onChange={(e) => setPassword(e.target.password)}
             placeholder="Password"
             required
           />
           <input
             type="password"
-            value={formData.confirmPassword}
-            onChange={handleInputChange}
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.confirmPassword)}
             placeholder="Confirm Password"
             required
           />
