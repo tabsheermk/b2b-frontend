@@ -3,12 +3,14 @@ import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import SignIn from "./pages/Sign-in";
 import SignUp from "./pages/Sign-up";
+import Header from "./components/Header";
 
 
 function App() {
     console.log("hello")
   return (
      <Router>
+      <Header />
      <Routes>
        <Route path="/" element={<Home />} />
        <Route path="/profile" element={<Profile />} />
