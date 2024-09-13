@@ -14,7 +14,7 @@ function Home() {
   return (
     <div className="">
       {
-        false ? (
+        isSeller ? (
           <SellerDashboard />
         ) : (
           <BuyerDashboard />
