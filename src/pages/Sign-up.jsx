@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useContext, useState } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { Context, server } from "../main";
 
 function SignUp() {
@@ -18,12 +18,15 @@ function SignUp() {
     setIsSeller(!isSeller); // Toggle between buyer and seller
   };
 
+  const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     setLoading(true);
     e.preventDefault();
 
     if (password !== confirmPassword) {
         alert("Passwords don't match");
+        setLoading(false);
         return;
     } 
 
@@ -46,6 +49,7 @@ function SignUp() {
 
       setIsAuthenticated(true);
       setLoading(false);
+      setUser(data.data.user);
     } catch (error) {
       setIsAuthenticated(false);
       setLoading(false);

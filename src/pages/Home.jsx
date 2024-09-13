@@ -1,4 +1,8 @@
 import React, { useContext } from 'react';
+import { Context } from '../main';
+import SellerDashboard from '../components/SellerDashboard';
+import BuyerDashboard from '../components/BuyerDashboard';
+import { Navigate } from 'react-router-dom';
 
 
 function Home() {
@@ -10,7 +14,7 @@ function Home() {
   return (
     <div className="">
       {
-        true ? (
+        false ? (
           <SellerDashboard />
         ) : (
           <BuyerDashboard />
@@ -19,8 +23,5 @@ function Home() {
     </div>
   )
 }
-import { Context } from '../main';
-import SellerDashboard from '../components/SellerDashboard';
-import { Navigate } from 'react-router-dom';
 
 export default Home;
