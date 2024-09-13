@@ -1,8 +1,14 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { server } from '../main';
+import React, { useContext, useEffect, useState } from 'react';
+import { Context, server } from '../main';
+import { Navigate } from 'react-router-dom';
 
 const BuyerDashboard = () => {
+  const {isSeller} = useContext(Context);
+
+  if (isSeller) return <Navigate to="/" />  
+
+  
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [search, setSearch] = useState('');

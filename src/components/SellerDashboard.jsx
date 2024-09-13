@@ -1,14 +1,16 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios'; // For API calls
 import { Context, server } from '../main';
+import { Navigate } from 'react-router-dom';
 
 const SellerDashboard = () => {
   const [products, setProducts] = useState([]);
   const [isEditing, setIsEditing] = useState(false); // To track if editing or adding
   const [editProductId, setEditProductId] = useState(null); // Track the product being edited
 
-  const { setIsAuthenticated, loading, setLoading, user } = useContext(Context);
+  const { setIsAuthenticated, loading, setLoading, user, isSeller } = useContext(Context);
 
+  if (!isSeller) return <Navigate to="/" />;
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -19,7 +21,7 @@ const SellerDashboard = () => {
   
   const [refresh, setRefresh] = useState(false);
 
-  useEffect(() => {
+  useEffect(() => { 
     axios
       .get(`${server}/api/v1/sellers/getMyProducts`, {
         withCredentials: true,
@@ -28,8 +30,7 @@ const SellerDashboard = () => {
         setProducts(res.data.products);
       })
       .catch((err) => {
-        console.log(err.response.data.message);
-      });
+        });
   }, [refresh]);
 
   const handleAddProduct = async (e) => {
@@ -104,7 +105,12 @@ const SellerDashboard = () => {
         }
       );
 
-      setProducts([...products, response.data.product]);
+      setProducts((prevProducts) =>
+        prevProducts.map((product) =>
+          product.product_id === editProductId ? response.data.product : product
+        )
+      );
+
       setName("");
       setCategory("");
       setDescription("");
@@ -113,13 +119,12 @@ const SellerDashboard = () => {
 
       setIsAuthenticated(true);
       setLoading(false);
-      setRefresh((prev) => !prev);
+      setRefresh((prev) => !prev);   
     } catch (error) {
       setIsAuthenticated(false);
       setLoading(false);
     }
   }
-
 
   // Populate form with product data for editing
   const handleEdit = (product) => {
@@ -135,8 +140,13 @@ const SellerDashboard = () => {
   // Delete product
   const handleDelete = async (productId) => {
     try {
-      await axios.delete(`/api/v1/sellers/${productId}`); // API to delete product
-      setProducts(products.filter((product) => product.id !== productId));
+      await axios.delete(`${server}/api/v1/sellers/${productId}`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }); // API to delete product
+      setProducts(products.filter((product) => product.product_id !== productId));
     } catch (error) {
       console.error('Error deleting product:', error.message);
     }
@@ -214,23 +224,23 @@ const SellerDashboard = () => {
         <p className="text-gray-600">You have no products listed.</p>
       ) : (
         <ul className="list-none space-y-4">
-          {products.map((product) => (
-            <li key={product.product_id} className="bg-white p-4 rounded-lg shadow-md">
-              <h3 className="text-xl font-semibold text-gray-800">{product.name}</h3>
-              <h4 className="text-l font-semibold text-gray-700">Category: {product.category}</h4>
-              <p className="text-gray-600">{product.description}</p>
-              <p className="text-gray-800">Price: INR {product.price}</p>
-              <p className="text-gray-600">Discount: {product.discount}%</p>
-              <div className="mt-4 flex space-x-2">
-                <button onClick={() => handleDelete(product.product_id)} className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
-                  Delete
-                </button>
-                <button onClick={() => handleEdit(product)} className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">
-                  Edit
-                </button>
-              </div>
-            </li>
-          ))}
+          {products && products.length > 0 && products.map((product) => (
+                <li key={product.product_id} className="bg-white p-4 rounded-lg shadow-md">
+                  <h3 className="text-xl font-semibold text-gray-800">{product.name}</h3>
+                  <h4 className="text-l font-semibold text-gray-700">Category: {product.category}</h4>
+                  <p className="text-gray-600">{product.description}</p>
+                  <p className="text-gray-800">Price: INR {product.price}</p>
+                  <p className="text-gray-600">Discount: {product.discount}%</p>
+                  <div className="mt-4 flex space-x-2">
+                    <button onClick={() => handleDelete(product.product_id)} className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+                      Delete
+                    </button>
+                    <button onClick={() => handleEdit(product)} className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">
+                      Edit
+                    </button>
+                  </div>
+                </li>
+              ))}
         </ul>
       )}
     </div>

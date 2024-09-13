@@ -1,22 +1,20 @@
-import axios from "axios";
 import React, { useContext, useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { Context, server } from "../main";
+import axios from "axios";
 
 function SignIn() {
-  
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const { isSeller, setIsSeller, isAuthenticated, setIsAuthenticated, loading, setLoading, setUser} = useContext(Context);
+  const { isSeller, setIsSeller, isAuthenticated, setIsAuthenticated, loading, setLoading, setUser } = useContext(Context);
 
   const user = isSeller ? "sellers" : "buyers";
+  const navigate = useNavigate();
 
   const handleSwitch = () => {
     setIsSeller(!isSeller); // Toggle between buyer and seller
   };
-
-  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     setLoading(true);
@@ -24,22 +22,14 @@ function SignIn() {
     try {
       const { data } = await axios.post(
         `${server}/api/v1/${user}/signin`,
-        {
-          email,
-          password,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        }
+        { email, password },
+        { headers: { "Content-Type": "application/json" }, withCredentials: true }
       );
 
       setIsAuthenticated(true);
+      setUser(data.user);
       setLoading(false);
-      setUser(data.data.user);
-      
+      navigate('/');
     } catch (error) {
       setIsAuthenticated(false);
       setLoading(false);

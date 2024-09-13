@@ -10,25 +10,24 @@ function SignUp() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const { isSeller, setIsSeller, isAuthenticated, setIsAuthenticated, loading, setLoading } = useContext(Context);
+  const { isSeller, setIsSeller, isAuthenticated, setIsAuthenticated, loading, setLoading, setUser } = useContext(Context);
 
   const user = isSeller ? "sellers" : "buyers";
+  const navigate = useNavigate();
 
   const handleSwitch = () => {
     setIsSeller(!isSeller); // Toggle between buyer and seller
   };
-
-  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     setLoading(true);
     e.preventDefault();
 
     if (password !== confirmPassword) {
-        alert("Passwords don't match");
-        setLoading(false);
-        return;
-    } 
+      alert("Passwords don't match");
+      setLoading(false);
+      return;
+    }
 
     try {
       const { data } = await axios.post(
@@ -48,9 +47,19 @@ function SignUp() {
       );
 
       setIsAuthenticated(true);
+      setUser(data.user);
+
+      // Check user profile to determine if they are a seller or buyer
+      if (isSeller) {
+        await axios.get(`${server}/api/v1/sellers/me`, { withCredentials: true });
+      } else {
+        await axios.get(`${server}/api/v1/buyers/me`, { withCredentials: true });
+      }
+
       setLoading(false);
-      setUser(data.data.user);
+      navigate('/');
     } catch (error) {
+      console.error(error);
       setIsAuthenticated(false);
       setLoading(false);
     }
