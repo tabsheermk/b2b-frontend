@@ -34,48 +34,39 @@ const SellerDashboard = () => {
   }, [refresh]);
 
   const handleAddProduct = async (e) => {
-    setLoading(true);
     e.preventDefault();
+    setLoading(true);
 
     if (price === 0 || discount === 0) {
-      alert("Price can't be zero");
+      alert("Price and discount can't be zero");
       setLoading(false);
       return;
     }
 
     try {
+      console.log("Making POST request to add product...");
       const response = await axios.post(
         `${server}/api/v1/sellers/addProduct`,
-        {
-          name,
-          description,
-          category,
-          price,
-          discount,
-          seller_email: user.email
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        }
+        { name, description, category, price, discount, seller_email: user.email },
+        { headers: { "Content-Type": "application/json" }, withCredentials: true }
       );
 
-      setProducts([...products, response.data.product]);
+      console.log("Product added successfully:", response.data);
       setName("");
       setCategory("");
       setDescription("");
       setDiscount(0);
       setPrice(0);
-
-      setIsAuthenticated(true);
-      setLoading(false);
+      setRefresh(prev => !prev);
     } catch (error) {
-      setIsAuthenticated(false);
+      console.error("Error adding product:", error.response ? error.response.data : error.message);
+      if (error.response && error.response.status === 401) {
+        setIsAuthenticated(false); // Handle unauthenticated state
+      }
+    } finally {
       setLoading(false);
     }
-  }
+  };
 
   const handleUpdateProduct = async (e) => {
     setLoading(true);
@@ -105,12 +96,6 @@ const SellerDashboard = () => {
         }
       );
 
-      setProducts((prevProducts) =>
-        prevProducts.map((product) =>
-          product.product_id === editProductId ? response.data.product : product
-        )
-      );
-
       setName("");
       setCategory("");
       setDescription("");
@@ -119,6 +104,7 @@ const SellerDashboard = () => {
 
       setIsAuthenticated(true);
       setLoading(false);
+      setIsEditing(false);
       setRefresh((prev) => !prev);   
     } catch (error) {
       setIsAuthenticated(false);
